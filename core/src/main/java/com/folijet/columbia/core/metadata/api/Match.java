@@ -1,12 +1,17 @@
 package com.folijet.columbia.core.metadata.api;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
 import java.util.List;
 
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "class")
 public interface Match extends Node {
     String getMatchEntityType();
 
     MatchCriteria getMatchCriteria();
 
+    @JsonIgnore
     List<Node> getNonMatchesChildren();
 
     <T extends Node> void addNonMatches(T child);
@@ -17,6 +22,7 @@ public interface Match extends Node {
 
     <T extends Node> T getNonMatchesChild(String id);
 
+    @JsonIgnore
     default List<Node> getMatchesChildren() {
         return getChildren();
     }

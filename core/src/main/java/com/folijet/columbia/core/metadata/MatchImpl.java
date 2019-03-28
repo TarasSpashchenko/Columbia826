@@ -1,14 +1,25 @@
 package com.folijet.columbia.core.metadata;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.folijet.columbia.core.metadata.api.Match;
 import com.folijet.columbia.core.metadata.api.MatchCriteria;
 import com.folijet.columbia.core.metadata.api.Node;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "class")
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class MatchImpl extends NodeImpl implements Match {
+    @JsonProperty
     private List<Node> nonMatchesContent = new ArrayList<>();
 
     private MatchCriteria matchCriteria;
@@ -41,6 +52,7 @@ public class MatchImpl extends NodeImpl implements Match {
         return matchCriteria;
     }
 
+    @JsonIgnore
     @Override
     public List<Node> getNonMatchesChildren() {
         return Collections.unmodifiableList(nonMatchesContent);
