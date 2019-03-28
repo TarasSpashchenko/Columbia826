@@ -12,6 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Slf4j
 public class ActionSerializationTest {
+
     @Test
     public void testActionSerialization() throws IOException {
         ActionImpl action = new ActionImpl(UUID.randomUUID().toString(), "Update Instance", "UPDATE", "INSTANCE", new MappingImpl());

@@ -8,6 +8,7 @@ import com.folijet.columbia.core.metadata.EntityObjectyImpl;
 
 import java.io.IOException;
 
+@Deprecated
 public class EventPayloadSerializer extends StdSerializer<EntityObjectyImpl> {
     protected EventPayloadSerializer(Class<EntityObjectyImpl> t) {
         super(t);

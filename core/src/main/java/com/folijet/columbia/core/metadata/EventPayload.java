@@ -1,5 +1,6 @@
 package com.folijet.columbia.core.metadata;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.folijet.columbia.core.metadata.api.EntityObject;
 import com.folijet.columbia.core.metadata.api.Job;
 import io.vertx.core.json.JsonObject;
@@ -17,6 +18,7 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class EventPayload {
     // uuid of the event
     private String eventId;
