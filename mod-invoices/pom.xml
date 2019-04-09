@@ -11,5 +11,12 @@
 
     <artifactId>mod-invoices</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.folijet.columbia</groupId>
+            <artifactId>core</artifactId>
+        </dependency>
+    </dependencies>
+
 
 </project>

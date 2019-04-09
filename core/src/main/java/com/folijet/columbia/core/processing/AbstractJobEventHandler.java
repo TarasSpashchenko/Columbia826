@@ -2,10 +2,12 @@ package com.folijet.columbia.core.processing;
 
 import com.folijet.columbia.core.metadata.EventPayload;
 import io.vertx.core.Vertx;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Common Handler for all event handlers. All EventHandlers should extend this class
  */
+@Slf4j
 public abstract class AbstractJobEventHandler implements JobEventHandler {
 
     /**
@@ -26,6 +28,7 @@ public abstract class AbstractJobEventHandler implements JobEventHandler {
     protected abstract EventPayload prepareNextEvent(EventPayload currentEventPayload);
 
     public void processEvent(Vertx vertx, EventPayload eventPayload, EventProcessor eventProcessor) {
+        log.info("Handler founded. Processing event");
         EventPayload handledEvent = handle(eventPayload, vertx);
         eventProcessor.finishEventProcessing(prepareNextEvent(handledEvent));
     }

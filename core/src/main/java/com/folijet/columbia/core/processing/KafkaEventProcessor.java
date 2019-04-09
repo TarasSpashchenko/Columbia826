@@ -44,6 +44,7 @@ public class KafkaEventProcessor implements EventProcessor {
         });
         consumer.handler(record -> {
             try {
+                log.info("Message Handled. Try to find handler");
                 EventPayload eventPayload = mapper.readValue(record.value(), EventPayload.class);
                 findEventHandler(eventPayload)
                         .ifPresent(jobEventHandler -> jobEventHandler.processEvent(vertx, eventPayload, this));
@@ -57,9 +58,12 @@ public class KafkaEventProcessor implements EventProcessor {
         try {
             EventPayload payload = prepareEventPayloadToSend(eventPayload);
             Optional<? extends AbstractJobEventHandler> handler = findEventHandler(eventPayload);
+            log.info("Finish Event processing");
             if (handler.isPresent()) {
+                log.info("Next event can ber processing without sending. Start processing");
                 handler.get().processEvent(vertx, eventPayload, this);
             } else {
+                log.info("Handler wasn't founded. Sending next Event Payload");
                 KafkaProducerRecord<String, String> record = KafkaProducerRecord.create(payload.getEntityType(), mapper.writeValueAsString(payload));
                 producer.write(record);
             }
