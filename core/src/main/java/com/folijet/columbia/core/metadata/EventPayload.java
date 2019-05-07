@@ -40,4 +40,9 @@ public class EventPayload {
 
     private Map<String, EntityObject<JsonObject>> objects;
 
+    private String tenantId;
+
+    private String token;
+
+    private String okapiUrl;
 }

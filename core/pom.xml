@@ -11,6 +11,14 @@
 
     <artifactId>core</artifactId>
 
+    <repositories>
+        <repository>
+            <id>folio-nexus</id>
+            <name>FOLIO Maven Repository</name>
+            <url>https://repository.folio.org/repository/maven-folio</url>
+        </repository>
+    </repositories>
+
     <dependencies>
         <dependency>
             <groupId>ch.qos.logback</groupId>

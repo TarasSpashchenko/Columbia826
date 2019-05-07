@@ -35,14 +35,7 @@ public class KafkaEventProcessor implements EventProcessor {
     }
 
     public void startEventProcessing() {
-        consumer.subscribe(topics, ar -> {
-            if (ar.succeeded()) {
-                log.info("subscribed on topic");
-            } else {
-                log.error("Could not subscribe", ar.cause());
-            }
-        });
-        consumer.handler(record -> {
+        consumer.asStream().handler(record -> {
             try {
                 EventPayload eventPayload = mapper.readValue(record.value(), EventPayload.class);
                 findEventHandler(eventPayload)
@@ -51,26 +44,30 @@ public class KafkaEventProcessor implements EventProcessor {
                 log.error("error during parsing payload", e);
             }
         });
+        consumer.subscribe(topics, ar -> {
+            if (ar.succeeded()) {
+                log.info("subscribed on topic");
+            } else {
+                log.error("Could not subscribe", ar.cause());
+            }
+        });
     }
 
     public void finishEventProcessing(EventPayload eventPayload) {
         try {
             EventPayload payload = prepareEventPayloadToSend(eventPayload);
-            Optional<? extends AbstractJobEventHandler> handler = findEventHandler(eventPayload);
-            if (handler.isPresent()) {
-                handler.get().processEvent(vertx, eventPayload, this);
-            } else {
-                KafkaProducerRecord<String, String> record = KafkaProducerRecord.create(payload.getEntityType(), mapper.writeValueAsString(payload));
-                producer.write(record);
-            }
+            KafkaProducerRecord<String, String> record = KafkaProducerRecord.create(payload.getEntityType(), mapper.writeValueAsString(payload));
+            producer.write(record);
         } catch (JsonProcessingException e) {
             log.error("error during parsing payload", e);
         }
     }
 
     private EventPayload prepareEventPayloadToSend(EventPayload eventPayload) {
-        eventPayload.getEventChain().add(eventPayload.getEventId());
-        eventPayload.setEventId(UUID.randomUUID().toString());
+        if (eventPayload.getEventId()!=null){
+            eventPayload.setEventId(UUID.randomUUID().toString());
+            eventPayload.getEventChain().add(eventPayload.getEventId());
+        }
         return eventPayload;
     }
 
